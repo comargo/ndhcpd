@@ -18,7 +18,7 @@ set(libndhcpd_src ndhcpd.cc
                 dhcp_error.cc dhcp_error.hpp
                 file.cc file.hpp
                 socket.cc socket.hpp)
-set(libndhcpd_inc include/ndhcpd/ndhcpd.hpp)
+set(libndhcpd_inc include/ndhcpd.hpp)
 add_library(ndhcpd ${libndhcpd_src} ${libndhcpd_inc})
 target_include_directories(ndhcpd
     PUBLIC

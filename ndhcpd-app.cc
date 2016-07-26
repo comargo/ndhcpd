@@ -1,4 +1,4 @@
-#include <ndhcpd/ndhcpd.hpp>
+#include <ndhcpd.hpp>
 
 #include <getopt.h>
 #include <iostream>

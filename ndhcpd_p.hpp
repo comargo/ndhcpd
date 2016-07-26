@@ -1,7 +1,7 @@
 #ifndef __NDHCPD_P_HPP__
 #define __NDHCPD_P_HPP__
 
-#include <ndhcpd/ndhcpd.hpp>
+#include <ndhcpd.hpp>
 #include <array>
 #include <chrono>
 #include <map>

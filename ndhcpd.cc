@@ -1,4 +1,4 @@
-#include <ndhcpd/ndhcpd.hpp>
+#include <ndhcpd.hpp>
 #include "ndhcpd_p.hpp"
 
 #include <arpa/inet.h>
