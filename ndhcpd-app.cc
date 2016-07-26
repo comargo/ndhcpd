@@ -76,22 +76,6 @@ void sig_handler_exit(int signo)
 
 int main(int argc, char *argv[])
 {
-    // Setup signal handlers
-    struct sigaction sa;
-    sa.sa_handler = &sig_handler_exit;
-    sa.sa_flags = SA_RESTART;
-    sigfillset(&sa.sa_mask);
-    sigaction(SIGINT, &sa, NULL);
-    sigaction(SIGQUIT, &sa, NULL);
-    sigaction(SIGABRT, &sa, NULL);
-    sigaction(SIGTERM, &sa, NULL);
-
-    sa.sa_handler = SIG_IGN;
-    sa.sa_flags = SA_RESTART;
-    sigaction(SIGHUP, &sa, NULL);
-    sigaction(SIGUSR1, &sa, NULL);
-    sigaction(SIGUSR2, &sa, NULL);
-
     std::vector<option> options = {
         {"pipe", required_argument, nullptr, 'p'},
         {"group", required_argument, nullptr, 'g'},
@@ -157,6 +141,22 @@ int main(int argc, char *argv[])
     }
 
     // Daemonize point
+
+    // Setup signal handlers
+    struct sigaction sa;
+    sa.sa_handler = &sig_handler_exit;
+    sa.sa_flags = SA_RESTART;
+    sigfillset(&sa.sa_mask);
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGQUIT, &sa, NULL);
+    sigaction(SIGABRT, &sa, NULL);
+    sigaction(SIGTERM, &sa, NULL);
+
+    sa.sa_handler = SIG_IGN;
+    sa.sa_flags = SA_RESTART;
+    sigaction(SIGHUP, &sa, NULL);
+    sigaction(SIGUSR1, &sa, NULL);
+    sigaction(SIGUSR2, &sa, NULL);
 
     try {
         const auto unlink_fifo(make_scope_exit(std::bind(&unlink, pipe_path.c_str())));
