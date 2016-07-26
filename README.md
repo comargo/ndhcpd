@@ -15,5 +15,5 @@ Application controls via pipe.
 
 ## TODO List
 - [ ] Daemonize application
-- [ ] Add option to select pipe-file group
+- [x] Add option to select pipe-file group
 - [ ] Support hotplug on interface

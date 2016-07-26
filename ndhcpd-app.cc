@@ -81,20 +81,25 @@ int main(int argc, char *argv[])
 
 
     std::vector<option> options = {
-      {"pipe", required_argument, nullptr, 'p'},
+        {"pipe", required_argument, nullptr, 'p'},
+        {"group", required_argument, nullptr, 'g'},
     };
 
     std::string pipe_path = "/var/tmp/ndhcpd";
+    std::string pipe_group = "netdev";
 
     for(;;) {
         int opt_index;
-        int opt = getopt_long(argc, argv, "p:", options.data(), &opt_index);
+        int opt = getopt_long(argc, argv, "p:g:", options.data(), &opt_index);
         if(opt == -1) {
             break;
         }
         switch (opt) {
         case 'p':
             pipe_path = optarg;
+            break;
+        case 'g':
+            pipe_group = optarg;
             break;
         default:
             break;
@@ -107,7 +112,12 @@ int main(int argc, char *argv[])
 //        return EXIT_FAILURE;
     }
 
-    struct group* gr = getgrnam("netdev");
+    struct group* gr = getgrnam(pipe_group.c_str());
+    if(!gr) {
+        std::ostringstream errstr;
+        errstr << "Can't change pipe group to '" << pipe_group << "'";
+        perror(errstr.str().c_str());
+    }
     chown(pipe_path.c_str(), -1, gr->gr_gid);
 
     // Daemonize point
