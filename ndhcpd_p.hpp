@@ -88,7 +88,7 @@ public:
     Logger log(int severity) const;
 
     void start();
-    void stop();
+    void stop(bool silent = false);
 
     void process_dhcp();
 

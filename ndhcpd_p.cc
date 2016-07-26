@@ -69,7 +69,7 @@ ndhcpd_private::ndhcpd_private()
 
 ndhcpd_private::~ndhcpd_private()
 {
-    stop();
+    stop(true);
 }
 
 
@@ -122,7 +122,7 @@ void ndhcpd_private::start()
             ioctl(_server, SIOCGIFADDR, &ifr);
             server_id = ((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr;
             {
-                log(LOG_INFO) << "Starting service at " << inet_ntoa(server_id) << std::endl;
+                log(LOG_INFO) << "Starting service at " << inet_ntoa(server_id);
             }
         }
 
@@ -135,25 +135,31 @@ void ndhcpd_private::start()
         std::swap(event, _event);
 
         serverThread = std::thread(std::mem_fn(&ndhcpd_private::process_dhcp), this);
-        log(LOG_INFO) << "Service started" << std::endl;
+        log(LOG_INFO) << "Service started";
     }
     catch(const std::system_error &err) {
-        log(LOG_ERR) << err.what() << std::endl;
+        log(LOG_ERR) << err.what();
         throw;
     }
 }
 
-void ndhcpd_private::stop()
+void ndhcpd_private::stop(bool silent)
 {
-    log(LOG_INFO) << "Stoping service" << std::endl;
+    if(!silent) {
+        log(LOG_INFO) << "Stoping service";
+    }
     stop_server = true;
     eventfd_write(event, 1);
     if(serverThread.joinable()) {
         serverThread.join();
-        log(LOG_INFO) << "Service stoped" << std::endl;
+        if(!silent) {
+            log(LOG_INFO) << "Service stoped";
+        }
     }
     else {
-        log(LOG_INFO) << "Service already stoped" << std::endl;
+        if(!silent) {
+            log(LOG_INFO) << "Service already stoped";
+        }
     }
     server.close();
     event.close();
@@ -181,7 +187,7 @@ void ndhcpd_private::process_dhcp()
             }
             std::for_each(pollFds.cbegin()+1, pollFds.cend(), [this](const pollfd& fd){
                if(fd.revents & (POLLERR|POLLHUP|POLLNVAL)) {
-                   log(LOG_ERR) << "Socket " << fd.fd << " in error state" << std::endl;
+                   log(LOG_ERR) << "Socket " << fd.fd << " in error state";
                }
                else if(fd.revents & POLLIN) {
                    try {
@@ -191,14 +197,14 @@ void ndhcpd_private::process_dhcp()
                        send_packet(fd.fd, out_packet);
                    }
                    catch(const std::system_error &err) {
-                       log(LOG_ERR) << err.what() << std::endl;
+                       log(LOG_ERR) << err.what();
                    }
                }
             });
         }
     }
     catch(const std::exception &err) {
-        log(LOG_ERR) << err.what() << std::endl;
+        log(LOG_ERR) << err.what();
     }
 }
 
@@ -235,7 +241,7 @@ dhcp_packet ndhcpd_private::process_packet(const dhcp_packet &packet)
         throw std::system_error(make_error_code(dhcp_error::invalid_packet), "process_packet()");
     }
 
-    log(LOG_INFO) << "Recieved " << dhcp_message_type_name(*msgType) << " from " << mac_to_string(packet.chaddr) << std::endl;
+    log(LOG_INFO) << "Recieved " << dhcp_message_type_name(*msgType) << " from " << mac_to_string(packet.chaddr);
 
     switch(*msgType) {
     case dhcp_message_type::discover:
@@ -266,7 +272,7 @@ void ndhcpd_private::send_packet(int fd, const dhcp_packet &packet)
     if(ret < 0)
         throw std::system_error(errno, std::system_category(), "sendto()");
 
-    log(LOG_INFO) << "Sent " << dhcp_message_type_name(*static_cast<const dhcp_message_type *>(dhcp_get_option(packet, dhcp_option::_code::message_type))) << " to " << mac_to_string(packet.chaddr) << std::endl;
+    log(LOG_INFO) << "Sent " << dhcp_message_type_name(*static_cast<const dhcp_message_type *>(dhcp_get_option(packet, dhcp_option::_code::message_type))) << " to " << mac_to_string(packet.chaddr);
 
 }
 
@@ -302,7 +308,7 @@ dhcp_packet ndhcpd_private::make_offer(const dhcp_packet &packet)
     out_packet.yiaddr = htonl(leaseIter->first);
     dhcp_add_option(&out_packet, dhcp_option::_code::lease_time, (uint32_t)leaseIter->second->lease_time.count());
     in_addr addr = {out_packet.yiaddr};
-    log(LOG_INFO) << "Make offer for " << inet_ntoa(addr) << " to " << mac_to_string(out_packet.chaddr) << std::endl;
+    log(LOG_INFO) << "Make offer for " << inet_ntoa(addr) << " to " << mac_to_string(out_packet.chaddr);
     return out_packet;
 }
 
@@ -327,7 +333,7 @@ dhcp_packet ndhcpd_private::process_ip_request(const dhcp_packet &packet)
         // client requested or configured IP matches the lease.
         // ACK it, and bump lease expiration time.
         in_addr addr = {htonl(requested_ip)};
-        log(LOG_INFO) << "Acknowledge request for " << inet_ntoa(addr) << " to " << mac_to_string(packet.chaddr) << std::endl;
+        log(LOG_INFO) << "Acknowledge request for " << inet_ntoa(addr) << " to " << mac_to_string(packet.chaddr);
         return ack_packet(packet, &(*leaseIter));
     }
 
@@ -337,7 +343,7 @@ dhcp_packet ndhcpd_private::process_ip_request(const dhcp_packet &packet)
             || requested_ip_opt // client is in INIT-REBOOT state
             ) {
         // "No, we don't have this IP for you"
-        log(LOG_INFO) << "Not acknowledge request to " << mac_to_string(packet.chaddr) << std::endl;
+        log(LOG_INFO) << "Not acknowledge request to " << mac_to_string(packet.chaddr);
         return nak_packet(packet);
     }
 

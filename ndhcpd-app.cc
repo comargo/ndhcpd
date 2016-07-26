@@ -5,6 +5,8 @@
 #include <vector>
 #include <system_error>
 #include <algorithm>
+#include <sstream>
+#include <functional>
 
 #include <sys/stat.h>
 #include <errno.h>
@@ -13,6 +15,9 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <poll.h>
+#define SYSLOG_NAMES 1
+#include <syslog.h>
+#include <string.h>
 
 #include "file.hpp"
 
@@ -51,8 +56,16 @@ scope_exit<T> make_scope_exit(T&& exitFn)
 }
 
 
-void logger(int level, const std::string &msg) {
-    std::cerr << level << ": " << msg;
+void logger(int level, const std::string &msg, int max_loglevel) {
+    if(max_loglevel < 0) { // Use -1 as syslog
+        syslog(level, "%s", msg.c_str());
+    } else if(level <= max_loglevel){
+        const char *levelName = std::find_if(std::begin(prioritynames), std::prev(std::end(prioritynames)), [level](const CODE& code){
+            return code.c_val == level;
+        })->c_name;
+
+        std::cerr << levelName << ": " << msg << std::endl;
+    }
 }
 
 void sig_handler_exit(int signo)
@@ -79,18 +92,21 @@ int main(int argc, char *argv[])
     sigaction(SIGUSR1, &sa, NULL);
     sigaction(SIGUSR2, &sa, NULL);
 
-
     std::vector<option> options = {
         {"pipe", required_argument, nullptr, 'p'},
         {"group", required_argument, nullptr, 'g'},
+        {"foreground", no_argument, nullptr, 'f'},
+        {"syslog", required_argument, nullptr, 's'},
     };
 
     std::string pipe_path = "/var/tmp/ndhcpd";
     std::string pipe_group = "netdev";
+    bool daemonize = true;
+    int debuglevel = LOG_ERR;
 
     for(;;) {
         int opt_index;
-        int opt = getopt_long(argc, argv, "p:g:", options.data(), &opt_index);
+        int opt = getopt_long(argc, argv, "p:g:fvs:", options.data(), &opt_index);
         if(opt == -1) {
             break;
         }
@@ -101,24 +117,44 @@ int main(int argc, char *argv[])
         case 'g':
             pipe_group = optarg;
             break;
+        case 'f':
+            daemonize = false;
+            break;
+        case 's':
+            debuglevel = std::find_if(std::begin(prioritynames), std::prev(std::end(prioritynames)), [](const CODE& code){
+                return strcmp(code.c_name, optarg) == 0;
+            })->c_val;
+            if(debuglevel == -1) {
+                char *endptr;
+                debuglevel == strtoul(optarg, &endptr, 0);
+            }
+            break;
+        case 'v':
+            debuglevel++;
+            break;
         default:
             break;
         }
     }
 
+    // Setup logging
+    setlogmask(LOG_UPTO(debuglevel));
+
+    using namespace std::placeholders;
+    ndhcpd::logfn_t _logger = std::bind(&logger, _1, _2, daemonize?-1:debuglevel);
+
     int ret = mkfifo(pipe_path.c_str(), S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP );
     if(ret < 0) {
-        perror("mkfifo");
-//        return EXIT_FAILURE;
+        _logger(LOG_WARNING, std::system_error(errno, std::system_category(), "mkfifo").what());
     }
 
     struct group* gr = getgrnam(pipe_group.c_str());
     if(!gr) {
-        std::ostringstream errstr;
-        errstr << "Can't change pipe group to '" << pipe_group << "'";
-        perror(errstr.str().c_str());
+        _logger(LOG_WARNING, std::system_error(errno, std::system_category(), "getgrnam").what());
     }
-    chown(pipe_path.c_str(), -1, gr->gr_gid);
+    if(chown(pipe_path.c_str(), -1, gr->gr_gid) != 0) {
+        _logger(LOG_WARNING, std::system_error(errno, std::system_category(), "chown").what());
+    }
 
     // Daemonize point
 
@@ -127,7 +163,7 @@ int main(int argc, char *argv[])
 
         File fifo(open(pipe_path.c_str(), O_RDONLY|O_NONBLOCK));
         ndhcpd srv;
-        srv.setLog(logger);
+        srv.setLog(_logger);
 
         while(!sStop) {
             std::vector<char> buf(256);
@@ -209,15 +245,11 @@ int main(int argc, char *argv[])
             }
         }
     }
-    catch(const std::system_error &err) {
-        std::cerr << err.what() << "(" << err.code() << ")" << std::endl;
+    catch(const std::system_error& ex) {
+        // System error already logged;
     }
-
     catch(const std::exception &ex) {
-        std::cerr << ex.what() << std::endl;
+        _logger(LOG_ERR, ex.what());
     }
-
-
-    logger(6, "Gracefull exit\n");
     return EXIT_SUCCESS;
 }
