@@ -141,6 +141,42 @@ int main(int argc, char *argv[])
     }
 
     // Daemonize point
+    if(daemonize) {
+        pid_t pid = fork();
+        if(pid < 0) {
+            _logger(LOG_ERR, std::system_error(errno, std::system_category(), "fork()").what());
+            return EXIT_FAILURE;
+        }
+        if(pid > 0) {
+            return EXIT_SUCCESS;
+        }
+
+        if(setsid() < 0) {
+            _logger(LOG_ERR, std::system_error(errno, std::system_category(), "setsid()").what());
+            return EXIT_FAILURE;
+        }
+
+        /* Fork off for the second time*/
+        pid = fork();
+        if(pid < 0) {
+            _logger(LOG_ERR, std::system_error(errno, std::system_category(), "2nd fork()").what());
+            return EXIT_FAILURE;
+        }
+        if(pid > 0) {
+            return EXIT_SUCCESS;
+        }
+
+        umask(0);
+        chdir("/");
+
+        /* Close all open file descriptors */
+        int x;
+        for (x = sysconf(_SC_OPEN_MAX); x>0; x--)
+        {
+            close (x);
+        }
+
+    }
 
     // Setup signal handlers
     struct sigaction sa;
@@ -247,9 +283,11 @@ int main(int argc, char *argv[])
     }
     catch(const std::system_error& ex) {
         // System error already logged;
+        return EXIT_FAILURE;
     }
     catch(const std::exception &ex) {
         _logger(LOG_ERR, ex.what());
+        return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
 }

@@ -14,6 +14,6 @@ Application controls via pipe.
 * `quit` - quit application
 
 ## TODO List
-- [ ] Daemonize application
+- [x] Daemonize application
 - [x] Add option to select pipe-file group
 - [ ] Support hotplug on interface
