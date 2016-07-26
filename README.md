@@ -13,7 +13,3 @@ Application controls via pipe.
 * `stop` - stop server
 * `quit` - quit application
 
-## TODO List
-- [x] Daemonize application
-- [x] Add option to select pipe-file group
-- [ ] Support hotplug on interface
