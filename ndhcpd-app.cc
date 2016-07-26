@@ -129,15 +129,15 @@ int main(int argc, char *argv[])
 
     int ret = mkfifo(pipe_path.c_str(), S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP );
     if(ret < 0) {
-        _logger(LOG_WARNING, std::system_error(errno, std::system_category(), "mkfifo").what());
+        _logger(LOG_WARNING, std::system_error(errno, std::system_category(), "mkfifo()").what());
     }
 
     struct group* gr = getgrnam(pipe_group.c_str());
     if(!gr) {
-        _logger(LOG_WARNING, std::system_error(errno, std::system_category(), "getgrnam").what());
+        _logger(LOG_WARNING, std::system_error(errno, std::system_category(), "getgrnam()").what());
     }
     if(chown(pipe_path.c_str(), -1, gr->gr_gid) != 0) {
-        _logger(LOG_WARNING, std::system_error(errno, std::system_category(), "chown").what());
+        _logger(LOG_WARNING, std::system_error(errno, std::system_category(), "chown()").what());
     }
 
     // Daemonize point
