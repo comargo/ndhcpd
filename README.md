@@ -15,3 +15,4 @@ Application controls via pipe.
 
 ## TODO List
 - [ ] Daemonize application
+- [ ] Add option to select pipe-file group
