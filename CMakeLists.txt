@@ -40,7 +40,7 @@ set(libndhcpd_src ndhcpd.cc
                 dhcp_error.cc dhcp_error.hpp
                 file.cc file.hpp
                 socket.cc socket.hpp)
-set(libndhcpd_inc include/ndhcpd.hpp)
+set(libndhcpd_inc include/ndhcpd.hpp include/ndhcpd.h)
 add_library(ndhcpd SHARED ${libndhcpd_src} ${libndhcpd_inc})
 target_include_directories(ndhcpd
     PUBLIC
@@ -51,7 +51,7 @@ target_compile_options(ndhcpd PRIVATE -pedantic)
 set_target_properties(ndhcpd PROPERTIES
     FRAMEWORK TRUE
     VERSION ${ndhcpd_VERSION_STRING}
-    PUBLIC_HEADER ${libndhcpd_inc})
+    PUBLIC_HEADER "${libndhcpd_inc}")
 
 add_executable(ndhcpd-app ndhcpd-app.cc)
 set_target_properties(ndhcpd-app PROPERTIES OUTPUT_NAME ndhcpd)

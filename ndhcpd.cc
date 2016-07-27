@@ -2,6 +2,7 @@
 #include "ndhcpd_p.hpp"
 
 #include <arpa/inet.h>
+#include <algorithm>
 
 using std::min;
 using std::max;
@@ -75,4 +76,100 @@ bool ndhcpd::isStarted() const
 void ndhcpd::setLog(ndhcpd::logfn_t logfn)
 {
     d->logfn = logfn;
+}
+
+// C interface implementation
+#include <ndhcpd.h>
+ndhcpd_t ndhcpd_create() __THROW
+{
+    try {
+        return reinterpret_cast<ndhcpd_t>(new ndhcpd());
+    }
+    catch(...) {
+        return nullptr;
+    }
+}
+
+void ndhcpd_delete(ndhcpd_t _ndhcpd) __THROW
+{
+    ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
+    delete p;
+}
+
+void ndhcpd_setInterfaceName(ndhcpd_t _ndhcpd, const char *ifaceName) __THROW
+{
+    ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
+    p->setInterfaceName(ifaceName);
+}
+
+void ndhcpd_addRange_s(ndhcpd_t _ndhcpd, const char *from, const char *to) __THROW
+{
+    ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
+    p->addRange(from, to);
+}
+
+void ndhcpd_addRange_i(ndhcpd_t _ndhcpd, uint32_t from, uint32_t to) __THROW
+{
+    ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
+    p->addRange(from, to);
+}
+
+void ndhcpd_addIp_s(ndhcpd_t _ndhcpd, const char *ip) __THROW
+{
+    ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
+    p->addIp(ip);
+}
+
+void ndhcpd_addIp_i(ndhcpd_t _ndhcpd, uint32_t ip) __THROW
+{
+    ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
+    p->addIp(ip);
+}
+
+int ndhcpd_ips(const ndhcpd_t _ndhcpd, uint32_t *ips, size_t ipsCount) __THROW
+{
+    const ndhcpd* p = reinterpret_cast<const ndhcpd*>(_ndhcpd);
+    if(!ips) {
+        return p->ips().size();
+    }
+
+    auto vIps = p->ips();
+    std::copy_n(vIps.begin(), std::min(ipsCount, vIps.size()), ips);
+    return std::min(ipsCount, vIps.size());
+}
+
+int ndhcpd_start(ndhcpd_t _ndhcpd) __THROW
+{
+    try {
+        ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
+        p->start();
+        return 0;
+    }
+    catch(...) {
+        return -1;
+    }
+}
+
+int ndhcpd_stop(ndhcpd_t _ndhcpd) __THROW
+{
+    try {
+        ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
+        p->stop();
+        return 0;
+    }
+    catch(...) {
+        return -1;
+    }
+}
+
+int ndhcpd_isStarted(const ndhcpd_t _ndhcpd) __THROW
+{
+    ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
+    return p->isStarted()?1:0;
+}
+
+void ndhcpd_setLog(ndhcpd_t _ndhcpd, ndhcpd_logfn_t logfn) __THROW
+{
+    ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
+    p->setLog([logfn](int level, std::string msg){return logfn(level, msg.c_str());});
 }
