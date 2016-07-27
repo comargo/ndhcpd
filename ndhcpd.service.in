@@ -1,0 +1,11 @@
+[Unit]
+Description=Nano-DHCP server
+After=network.target
+
+[Service]
+ExecStart=@CMAKE_INSTALL_PREFIX@/bin/ndhcpd
+ExecStop=/bin/echo "quit" > /var/tmp/ndhcpd
+Type=forking
+
+[Install]
+WantedBy=default.target
