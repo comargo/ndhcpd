@@ -90,6 +90,7 @@ public:
     void start();
     void stop(bool silent = false);
 
+    void get_server_id(const Socket &_server);
     void process_dhcp();
 
     // packet workflow
@@ -116,8 +117,6 @@ public:
     struct sockaddr_in srcAddr;
     struct sockaddr_in dstAddr;
     std::string ifaceName;
-
-
 };
 
 #endif//__NDHCPD_P_HPP__

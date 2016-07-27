@@ -101,6 +101,20 @@ ndhcpd_private::Logger ndhcpd_private::log(int severity) const
     return Logger(this, severity);
 }
 
+void ndhcpd_private::get_server_id(const Socket &_server)
+{
+    struct ifreq ifr;
+    ifaceName.copy(ifr.ifr_name, std::size(ifr.ifr_name));
+    if(ioctl(_server, SIOCGIFADDR, &ifr) == 0) {
+        server_id = ((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr;
+        log(LOG_INFO) << "Bind DHCP server to " << inet_ntoa(server_id);
+    }
+    else {
+        server_id.s_addr = INADDR_NONE;
+        log(LOG_INFO) << "Starting DHCP without server IP";
+    }
+}
+
 void ndhcpd_private::start()
 {
     try {
@@ -119,11 +133,7 @@ void ndhcpd_private::start()
             //  The resulting character string is not null-terminated.
             ifr.ifr_name[std::size(ifr.ifr_name)-1] = 0;
             _server.setsockopt(SOL_SOCKET, SO_BINDTODEVICE, ifr);
-            ioctl(_server, SIOCGIFADDR, &ifr);
-            server_id = ((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr;
-            {
-                log(LOG_INFO) << "Starting service at " << inet_ntoa(server_id);
-            }
+            get_server_id(_server);
         }
 
         sockaddr_in addr = srcAddr;
@@ -191,6 +201,9 @@ void ndhcpd_private::process_dhcp()
                }
                else if(fd.revents & POLLIN) {
                    try {
+                       if(server_id.s_addr == INADDR_NONE) {
+                           get_server_id(server);
+                       }
                        struct dhcp_packet in_packet;
                        in_packet = recieve_packet(fd.fd);
                        struct dhcp_packet out_packet = process_packet(in_packet);
