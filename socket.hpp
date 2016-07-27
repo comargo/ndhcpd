@@ -1,5 +1,5 @@
-#ifndef __SOCKET_HPP__
-#define __SOCKET_HPP__
+#ifndef NDHCPD_SOCKET_HPP
+#define NDHCPD_SOCKET_HPP
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -87,4 +87,4 @@ inline void sockopt<bool>::get(Socket &sock, int level, int optname, bool *optva
     *optval = (u32val != 0);
 }
 
-#endif//__SOCKET_HPP__
+#endif//NDHCPD_SOCKET_HPP

@@ -1,5 +1,5 @@
-#ifndef __DHCP_ERROR_HPP__
-#define __DHCP_ERROR_HPP__
+#ifndef NDHCPD_DHCP_ERROR_HPP
+#define NDHCPD_DHCP_ERROR_HPP
 
 #include <system_error>
 
@@ -57,4 +57,4 @@ template <> struct is_error_code_enum<dhcp_error>
 }
 
 
-#endif//__DHCP_ERROR_HPP__
+#endif//NDHCPD_DHCP_ERROR_HPP

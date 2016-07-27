@@ -1,5 +1,5 @@
-#ifndef __FILE_HPP__
-#define __FILE_HPP__
+#ifndef NDHCPD_FILE_HPP
+#define NDHCPD_FILE_HPP
 
 class File
 {
@@ -29,4 +29,4 @@ private:
 
 };
 
-#endif//__FILE_HPP__
+#endif//NDHCPD_FILE_HPP

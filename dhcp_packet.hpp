@@ -1,5 +1,5 @@
-#ifndef __DHCP_PACKET_HPP__
-#define __DHCP_PACKET_HPP__
+#ifndef NDHCPD_DHCP_PACKET_HPP
+#define NDHCPD_DHCP_PACKET_HPP
 
 #include <stdint.h>
 
@@ -69,4 +69,4 @@ inline void dhcp_add_option(dhcp_packet *packet, dhcp_option::_code code, const 
 
 const char * dhcp_message_type_name(dhcp_message_type type);
 
-#endif//__DHCP_PACKET_HPP__
+#endif//NDHCPD_DHCP_PACKET_HPP

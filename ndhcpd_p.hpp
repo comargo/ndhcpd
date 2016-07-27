@@ -1,5 +1,5 @@
-#ifndef __NDHCPD_P_HPP__
-#define __NDHCPD_P_HPP__
+#ifndef NDHCPD_NDHCPD_P_HPP
+#define NDHCPD_NDHCPD_P_HPP
 
 #include <ndhcpd.hpp>
 #include <array>
@@ -119,4 +119,4 @@ public:
     std::string ifaceName;
 };
 
-#endif//__NDHCPD_P_HPP__
+#endif//NDHCPD_NDHCPD_P_HPP

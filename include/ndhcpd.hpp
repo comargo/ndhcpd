@@ -1,5 +1,5 @@
-#ifndef __NDHCPD_HPP__
-#define __NDHCPD_HPP__
+#ifndef NDHCPD_HPP
+#define NDHCPD_HPP
 
 #include <stdint.h>
 #include <string>
@@ -39,4 +39,4 @@ private:
 };
 
 
-#endif//__NDHCPD_HPP__
+#endif//NDHCPD_HPP
