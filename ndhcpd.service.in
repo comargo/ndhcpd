@@ -4,7 +4,6 @@ After=network.target
 
 [Service]
 ExecStart=@CMAKE_INSTALL_PREFIX@/bin/ndhcpd
-ExecStop=/bin/echo "quit" > /var/tmp/ndhcpd
 Type=forking
 
 [Install]
