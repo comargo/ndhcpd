@@ -319,7 +319,7 @@ dhcp_packet ndhcpd_private::make_offer(const dhcp_packet &packet)
     leaseIter->second.reset(new lease_data(packet.chaddr, std::chrono::seconds(60))); // Set lease for offer time (60 sec)
 
     out_packet.yiaddr = htonl(leaseIter->first);
-    dhcp_add_option(&out_packet, dhcp_option::_code::lease_time, (uint32_t)leaseIter->second->lease_time.count());
+    dhcp_add_option(&out_packet, dhcp_option::_code::lease_time, htonl(leaseIter->second->lease_time.count()));
     in_addr addr = {out_packet.yiaddr};
     log(LOG_INFO) << "Make offer for " << inet_ntoa(addr) << " to " << mac_to_string(out_packet.chaddr);
     return out_packet;
@@ -384,7 +384,7 @@ dhcp_packet ndhcpd_private::ack_packet(const dhcp_packet &packet, leases_t::valu
     lease->second.reset(new lease_data(packet.chaddr, std::chrono::hours(1))); // Set lease for lease time (1hour)
 
     out_packet.yiaddr = htonl(lease->first);
-    dhcp_add_option(&out_packet, dhcp_option::_code::lease_time, (uint32_t)lease->second->lease_time.count());
+    dhcp_add_option(&out_packet, dhcp_option::_code::lease_time, htonl(lease->second->lease_time.count()));
     return out_packet;
 }
 
