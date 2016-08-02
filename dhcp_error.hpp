@@ -5,7 +5,7 @@
 
 enum class dhcp_error {
     ok = 0,
-    invalid_packet,
+    invalid_packet = 512,
     invalid_hwtype,
     unexpected_packet_type,
     unexpected_message_type,

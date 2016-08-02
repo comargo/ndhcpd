@@ -151,6 +151,9 @@ int ndhcpd_start(ndhcpd_t _ndhcpd) __THROW
         p->start();
         return 0;
     }
+    catch(const std::system_error &err) {
+        return err.code().value();
+    }
     catch(...) {
         return -1;
     }
@@ -162,6 +165,9 @@ int ndhcpd_stop(ndhcpd_t _ndhcpd) __THROW
         ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
         p->stop();
         return 0;
+    }
+    catch(const std::system_error &err) {
+        return err.code().value();
     }
     catch(...) {
         return -1;
