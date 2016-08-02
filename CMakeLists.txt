@@ -47,7 +47,7 @@ target_include_directories(ndhcpd
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>)
 target_link_libraries(ndhcpd ${CMAKE_THREAD_LIBS_INIT})
-target_compile_options(ndhcpd PRIVATE -pedantic)
+target_compile_options(ndhcpd PRIVATE -pedantic -Wall)
 set_target_properties(ndhcpd PROPERTIES
     FRAMEWORK TRUE
     VERSION ${ndhcpd_VERSION_STRING}
@@ -56,6 +56,7 @@ set_target_properties(ndhcpd PROPERTIES
 add_executable(ndhcpd-app ndhcpd-app.cc)
 set_target_properties(ndhcpd-app PROPERTIES OUTPUT_NAME ndhcpd)
 target_link_libraries(ndhcpd-app ndhcpd)
+target_compile_options(ndhcpd-app PRIVATE -pedantic -Wall)
 #set_target_properties(ndhcpd-app PROPERTIES VERSION ${ndhcpd_VERSION_STRING})
 
 install(TARGETS ndhcpd ndhcpd-app

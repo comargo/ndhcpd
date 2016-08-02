@@ -68,6 +68,6 @@ const char *dhcp_message_type_name(dhcp_message_type type)
     case dhcp_message_type::inform:
         return "INFORM";
     default:
-        "<<Unknown message type>>";
+        return "<<Unknown message type>>";
     }
 }

@@ -39,4 +39,5 @@ int File::close()
         ::close(fd);
         fd = -1;
     }
+    return 0;
 }

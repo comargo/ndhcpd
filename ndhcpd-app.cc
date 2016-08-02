@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
             })->c_val;
             if(debuglevel == -1) {
                 char *endptr;
-                debuglevel == strtoul(optarg, &endptr, 0);
+                debuglevel = strtoul(optarg, &endptr, 0);
             }
             useDebugLevel = true;
             break;
