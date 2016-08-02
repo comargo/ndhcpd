@@ -21,31 +21,37 @@ void ndhcpd::setInterfaceName(const std::string &ifaceName)
     d->ifaceName = ifaceName;
 }
 
-void ndhcpd::addRange(const std::string &from, const std::string &to)
+void ndhcpd::addRange(const std::string &from, const std::string &to, const std::string &mask)
 {
     in_addr_t n_addr_from = inet_addr(from.c_str());
     in_addr_t n_addr_to = inet_addr(to.c_str());
+    in_addr_t n_addr_mask = inet_addr(mask.c_str());
 
-    return addRange(ntohl(n_addr_from), ntohl(n_addr_to));
+    return addRange(ntohl(n_addr_from), ntohl(n_addr_to), ntohl(n_addr_mask));
 }
 
-void ndhcpd::addRange(uint32_t from, uint32_t to)
+void ndhcpd::addRange(uint32_t from, uint32_t to, uint32_t mask)
 {
     for(uint32_t ip = min(from, to); ip <= max(from,to); ++ip) {
-        addIp(ip);
+        addIp(ip, mask);
     }
 }
 
-void ndhcpd::addIp(const std::string &ip)
+void ndhcpd::addIp(const std::string &ip, const std::string &mask)
 {
     in_addr_t n_addr = inet_addr(ip.c_str());
+    in_addr_t n_addr_mask = inet_addr(mask.c_str());
 
-    return addIp(ntohl(n_addr));
+    return addIp(ntohl(n_addr), ntohl(n_addr_mask));
 }
 
-void ndhcpd::addIp(uint32_t ip)
+void ndhcpd::addIp(uint32_t ip, uint32_t mask)
 {
-    d->leases.emplace(ip, nullptr);
+    if(mask <= 32) {
+        // mask len provided instead of mask
+        mask = ~((1<<(32-mask))-1);
+    }
+    d->leases.emplace(ndhcpd_private::ipinfo(ip, mask), nullptr);
 }
 
 std::vector<uint32_t> ndhcpd::ips() const
@@ -53,7 +59,7 @@ std::vector<uint32_t> ndhcpd::ips() const
     std::vector<uint32_t> out;
     out.reserve(d->leases.size());
     for(auto &value : d->leases) {
-        out.push_back(value.first);
+        out.push_back(value.first.ip);
     }
     return out;
 }
@@ -102,28 +108,28 @@ void ndhcpd_setInterfaceName(ndhcpd_t _ndhcpd, const char *ifaceName) __THROW
     p->setInterfaceName(ifaceName);
 }
 
-void ndhcpd_addRange_s(ndhcpd_t _ndhcpd, const char *from, const char *to) __THROW
+void ndhcpd_addRange_s(ndhcpd_t _ndhcpd, const char *from, const char *to, const char *mask) __THROW
 {
     ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
-    p->addRange(from, to);
+    p->addRange(from, to, mask);
 }
 
-void ndhcpd_addRange_i(ndhcpd_t _ndhcpd, uint32_t from, uint32_t to) __THROW
+void ndhcpd_addRange_i(ndhcpd_t _ndhcpd, uint32_t from, uint32_t to, uint32_t mask) __THROW
 {
     ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
-    p->addRange(from, to);
+    p->addRange(from, to, mask);
 }
 
-void ndhcpd_addIp_s(ndhcpd_t _ndhcpd, const char *ip) __THROW
+void ndhcpd_addIp_s(ndhcpd_t _ndhcpd, const char *ip, const char *mask) __THROW
 {
     ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
-    p->addIp(ip);
+    p->addIp(ip, mask);
 }
 
-void ndhcpd_addIp_i(ndhcpd_t _ndhcpd, uint32_t ip) __THROW
+void ndhcpd_addIp_i(ndhcpd_t _ndhcpd, uint32_t ip, uint32_t mask) __THROW
 {
     ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
-    p->addIp(ip);
+    p->addIp(ip, mask);
 }
 
 int ndhcpd_ips(const ndhcpd_t _ndhcpd, uint32_t *ips, size_t ipsCount) __THROW

@@ -80,7 +80,7 @@ bool ndhcpd_private::lease_is_mac_equal::operator ()(const leases_t::value_type 
     return memcmp(lease.second->mac.data(), mac, lease.second->mac.size()) == 0;
 }
 
-bool ndhcpd_private::lease_is_overdue::operator ()(const std::map<uint32_t, std::unique_ptr<lease_data> >::value_type &lease)
+bool ndhcpd_private::lease_is_overdue::operator ()(const leases_t::value_type &lease)
 {
     if(!lease.second) {
         // not allocated lease is ok
@@ -319,8 +319,9 @@ dhcp_packet ndhcpd_private::make_offer(const dhcp_packet &packet)
 
     leaseIter->second.reset(new lease_data(packet.chaddr, std::chrono::seconds(60))); // Set lease for offer time (60 sec)
 
-    out_packet.yiaddr = htonl(leaseIter->first);
+    out_packet.yiaddr = htonl(leaseIter->first.ip);
     dhcp_add_option(&out_packet, dhcp_option::_code::lease_time, htonl(leaseIter->second->lease_time.count()));
+    dhcp_add_option(&out_packet, dhcp_option::_code::subnet_mask, htonl(leaseIter->first.subnet));
     in_addr addr = {out_packet.yiaddr};
     log(LOG_INFO) << "Make offer for " << inet_ntoa(addr) << " to " << mac_to_string(out_packet.chaddr);
     return out_packet;
@@ -343,7 +344,7 @@ dhcp_packet ndhcpd_private::process_ip_request(const dhcp_packet &packet)
     }
 
     leases_t::iterator leaseIter = std::find_if(leases.begin(), leases.end(), lease_is_mac_equal(packet.chaddr));
-    if(leaseIter != leases.end() && leaseIter->first == requested_ip) {
+    if(leaseIter != leases.end() && leaseIter->first.ip == requested_ip) {
         // client requested or configured IP matches the lease.
         // ACK it, and bump lease expiration time.
         in_addr addr = {htonl(requested_ip)};
@@ -384,8 +385,9 @@ dhcp_packet ndhcpd_private::ack_packet(const dhcp_packet &packet, leases_t::valu
 
     lease->second.reset(new lease_data(packet.chaddr, std::chrono::hours(1))); // Set lease for lease time (1hour)
 
-    out_packet.yiaddr = htonl(lease->first);
+    out_packet.yiaddr = htonl(lease->first.ip);
     dhcp_add_option(&out_packet, dhcp_option::_code::lease_time, htonl(lease->second->lease_time.count()));
+    dhcp_add_option(&out_packet, dhcp_option::_code::subnet_mask, htonl(lease->first.subnet));
     return out_packet;
 }
 

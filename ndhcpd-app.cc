@@ -237,14 +237,21 @@ int main(int argc, char *argv[])
                     srv.setInterfaceName(cmdParam);
                     break;
                 case 'a':
-                    if((pos = cmdParam.find(' ')) != std::string::npos) {
+                {
+                    std::string subnet="255.255.255.0";
+                    if((pos = cmdParam.find('/')) != std::string::npos) {
+                        subnet.assign(cmdParam, pos+1, std::string::npos);
+                        cmdParam.erase(pos);
+                    }
+                    if((pos = cmdParam.find('-')) != std::string::npos) {
                         std::string ipFrom(cmdParam, 0, pos);
                         std::string ipTo(cmdParam, pos+1);
-                        srv.addRange(ipFrom, ipTo);
+                        srv.addRange(ipFrom, ipTo, subnet);
                     }
                     else {
-                        srv.addIp(cmdParam);
+                        srv.addIp(cmdParam,subnet);
                     }
+                }
                     break;
                 case 's':
                     if(cmd == "start") {

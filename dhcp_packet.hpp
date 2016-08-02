@@ -21,6 +21,7 @@ enum class dhcp_message_type : uint8_t {
 struct dhcp_option {
     enum class _code : uint8_t {
         padding = 0,
+        subnet_mask = 1,
         requested_ip = 50,
         lease_time = 51,
         message_type = 53,

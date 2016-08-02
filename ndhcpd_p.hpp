@@ -39,7 +39,24 @@ public:
     };
 
     ndhcpd::logfn_t logfn;
-    typedef std::map<uint32_t, std::unique_ptr<lease_data>> leases_t;
+    struct ipinfo {
+        ipinfo(uint32_t ip_, uint32_t subnet_)
+            : ip(ip_), subnet(subnet_)
+        {}
+        uint32_t ip;
+        uint32_t subnet;
+        bool operator<(const ipinfo& other) const {
+            return ip < other.ip;
+        }
+        bool operator ==(const ipinfo& other) const {
+            return ip == other.ip;
+        }
+        bool operator !=(const ipinfo& other) const {
+            return ip != other.ip;
+        }
+    };
+
+    typedef std::map<ipinfo, std::unique_ptr<lease_data>> leases_t;
     leases_t leases;
 
     struct lease_is_mac_equal {
