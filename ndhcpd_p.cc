@@ -122,6 +122,7 @@ void ndhcpd_private::start()
             log(LOG_INFO, "Server thread already started");
             return;
         }
+        stop_server = false;
         Socket _server(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
         _server.setsockopt(SOL_SOCKET, SO_REUSEADDR, true);
