@@ -86,6 +86,7 @@ int main(int argc, char *argv[])
         {"group", required_argument, nullptr, 'g'},
         {"foreground", no_argument, nullptr, 'f'},
         {"syslog", required_argument, nullptr, 's'},
+	{0,0,0,0}
     };
 
     std::string pipe_path = "/var/tmp/ndhcpd";
