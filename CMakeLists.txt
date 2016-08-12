@@ -41,25 +41,25 @@ set(libndhcpd_src ndhcpd.cc
                 file.cc file.hpp
                 socket.cc socket.hpp)
 set(libndhcpd_inc include/ndhcpd.hpp include/ndhcpd.h)
-add_library(ndhcpd SHARED ${libndhcpd_src} ${libndhcpd_inc})
-target_include_directories(ndhcpd
+add_library(ndhcpd${ndhcpd_VERSION_MAJOR} SHARED ${libndhcpd_src} ${libndhcpd_inc})
+target_include_directories(ndhcpd${ndhcpd_VERSION_MAJOR}
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>)
-target_link_libraries(ndhcpd ${CMAKE_THREAD_LIBS_INIT})
-target_compile_options(ndhcpd PRIVATE -pedantic -Wall)
-set_target_properties(ndhcpd PROPERTIES
+target_link_libraries(ndhcpd${ndhcpd_VERSION_MAJOR} ${CMAKE_THREAD_LIBS_INIT})
+target_compile_options(ndhcpd${ndhcpd_VERSION_MAJOR} PRIVATE -pedantic -Wall)
+set_target_properties(ndhcpd${ndhcpd_VERSION_MAJOR} PROPERTIES
     FRAMEWORK TRUE
     VERSION ${ndhcpd_VERSION_STRING}
     PUBLIC_HEADER "${libndhcpd_inc}")
 
 add_executable(ndhcpd-app ndhcpd-app.cc)
 set_target_properties(ndhcpd-app PROPERTIES OUTPUT_NAME ndhcpd)
-target_link_libraries(ndhcpd-app ndhcpd)
+target_link_libraries(ndhcpd-app ndhcpd${ndhcpd_VERSION_MAJOR})
 target_compile_options(ndhcpd-app PRIVATE -pedantic -Wall)
 #set_target_properties(ndhcpd-app PROPERTIES VERSION ${ndhcpd_VERSION_STRING})
 
-install(TARGETS ndhcpd ndhcpd-app
+install(TARGETS ndhcpd${ndhcpd_VERSION_MAJOR} ndhcpd-app
     RUNTIME DESTINATION bin COMPONENT bin
     LIBRARY DESTINATION lib/${CMAKE_LIBRARY_ARCHITECTURE} COMPONENT lib
     ARCHIVE DESTINATION lib/${CMAKE_LIBRARY_ARCHITECTURE} COMPONENT dev
