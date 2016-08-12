@@ -156,7 +156,10 @@ int main(int argc, char *argv[])
 
     // Daemonize point
     if(daemonize) {
-	daemon(0,0);
+	if(daemon(0,0) != 0) {
+        logger(LOG_ERR, std::system_error(errno, std::system_category(), "daemon()").what());
+            return EXIT_FAILURE;
+        }
     }
 
     logger(LOG_INFO, "Starting...");

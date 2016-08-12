@@ -229,7 +229,7 @@ dhcp_packet ndhcpd_private::recieve_packet(int fd)
     if(len < 0) {
         throw std::system_error(errno, std::system_category(), "read()");
     }
-    if(len < offsetof(dhcp_packet, options) ||
+    if(len < (ssize_t)offsetof(dhcp_packet, options) ||
             packet.cookie != htonl(dhcp_packet::cookie_value_he)) {
         throw std::system_error(make_error_code(dhcp_error::invalid_packet), "recieve_packet()");
     }
