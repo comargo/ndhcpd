@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(ndhcpd)
 
+include(GNUInstallDirs)
+
 set(ndhcpd_VERSION_MAJOR 0)
 set(ndhcpd_VERSION_MINOR 1)
 set(ndhcpd_VERSION_PATCH 0)
@@ -60,10 +62,10 @@ target_compile_options(ndhcpd-app PRIVATE -pedantic -Wall)
 #set_target_properties(ndhcpd-app PROPERTIES VERSION ${ndhcpd_VERSION_STRING})
 
 install(TARGETS ndhcpd${ndhcpd_VERSION_MAJOR} ndhcpd-app
-    RUNTIME DESTINATION bin COMPONENT bin
-    LIBRARY DESTINATION lib/${CMAKE_LIBRARY_ARCHITECTURE} COMPONENT lib
-    ARCHIVE DESTINATION lib/${CMAKE_LIBRARY_ARCHITECTURE} COMPONENT dev
-    PUBLIC_HEADER DESTINATION include COMPONENT dev
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT dev
  )
 
 configure_file(ndhcpd.service.in ${SERVICE_INSTALL_PATH}/ndhcpd.service)
