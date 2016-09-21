@@ -5,7 +5,7 @@ include(GNUInstallDirs)
 
 set(ndhcpd_VERSION_MAJOR 0)
 set(ndhcpd_VERSION_MINOR 1)
-set(ndhcpd_VERSION_PATCH 0)
+set(ndhcpd_VERSION_PATCH 1)
 set(ndhcpd_VERSION_STRING ${ndhcpd_VERSION_MAJOR}.${ndhcpd_VERSION_MINOR}.${ndhcpd_VERSION_PATCH})
 
 if (CMAKE_VERSION VERSION_LESS "3.1")
