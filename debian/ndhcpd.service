@@ -1,0 +1,10 @@
+[Unit]
+Description=Nano-DHCP server
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/ndhcpd
+Type=forking
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,16 @@
+ndhcpd (0.1.1-xenial1) xenial; urgency=medium
+
+  * Remove compile warnings
+  * Install libraries to architecture-specific path
+  * Change library name to contain major version
+  * Fix INSTALL dirs to use GNUInstallDirs
+  * Initial debian package
+
+ -- Cyril Margorin <comargo@gmail.com>  Wed, 21 Sep 2016 12:16:39 +0300
+
+ndhcpd (0.1.0) xenial; urgency=medium
+
+  * Initial release.
+  * Initial commit of debian package
+
+ -- Cyril Margorin <comargo@gmail.com>  Mon, 19 Sep 2016 13:41:17 +0300

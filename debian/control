@@ -1,0 +1,63 @@
+Source: ndhcpd
+Priority: optional
+Maintainer: Cyril Margorin <comargo@gmail.com>
+Build-Depends: 
+ debhelper (>=9),
+ dh-exec,
+ dh-systemd (>=1.5),
+ cmake (>=2.8)
+Standards-Version: 3.9.7
+Section: contrib/net
+Homepage: https://github.com/comargo/ndhcpd
+Vcs-Git: https://github.com/comargo/ndhcpd.git
+Vcs-Browser: https://github.com/comargo/ndhcpd
+
+Package: libndhcpd0-0.1.1
+Section: contrib/libs
+Architecture: any
+Depends: 
+ ${shlibs:Depends},
+ ${misc:Depends}
+Description: Nano-DHCP server (library)
+ Very simple dhcp server implementation.
+
+Package: libndhcpd0-dbg
+Section: contrib/debug
+Priority: extra
+Architecture: any
+Depends: 
+ ${misc:Depends},
+ libndhcpd0-0.1.1 (= ${binary:Version}), 
+Description: Nano-DHCP server (dbg)
+ Very simple dhcp server implementation.
+
+Package: libndhcpd-dev
+Section: contrib/libdevel
+Architecture: any
+Depends: 
+ ${misc:Depends},
+ libndhcpd0-0.1.1 (= ${binary:Version}), 
+Description: Nano-DHCP server (dev)
+ Very simple dhcp server implementation.
+
+Package: ndhcpd
+Section: contrib/net
+Architecture: any
+Depends: 
+ ${shlibs:Depends},
+ ${misc:Depends},
+ libndhcpd0-0.1.1 (= ${binary:Version})
+Description: Nano-DHCP server
+ Very simple dhcp server implementation.
+
+Package: ndhcpd-dbg
+Section: contrib/debug
+Priority: extra
+Architecture: any
+Depends: 
+ ${shlibs:Depends},
+ ${misc:Depends},
+ ndhcpd (= ${binary:Version})
+Description: Nano-DHCP server (dbg)
+ Very simple dhcp server implementation.
+
