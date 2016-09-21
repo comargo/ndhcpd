@@ -1,0 +1,4 @@
+usr/include/*
+usr/lib/*/libndhcpd0.so
+#usr/lib/*/pkgconfig/*
+#usr/share/pkgconfig/*
