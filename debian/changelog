@@ -1,3 +1,9 @@
+ndhcpd (0.1.1-trusty3) trusty; urgency=medium
+
+  * Fix init script
+
+ -- Cyril Margorin <comargo@gmail.com>  Thu, 22 Sep 2016 12:04:48 +0300
+
 ndhcpd (0.1.1-trusty2) trusty; urgency=medium
 
   * Fix symbols
