@@ -54,47 +54,55 @@ libndhcpd0.so.0.1.1 libndhcpd0-0.1.0 #MINVER#
  _ZN6SocketD1Ev@Base 0.1.1
  _ZN6SocketD2Ev@Base 0.1.1
  _ZN6SocketaSEOS_@Base 0.1.1
- _ZN6ndhcpd16setInterfaceNameERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE@Base 0.1.1
+ _ZN6ndhcpd16setInterfaceNameERKSs@Base 0.1.1
  _ZN6ndhcpd4stopEv@Base 0.1.1
- _ZN6ndhcpd5addIpERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES7_@Base 0.1.1
+ _ZN6ndhcpd5addIpERKSsS1_@Base 0.1.1
  _ZN6ndhcpd5addIpEjj@Base 0.1.1
  _ZN6ndhcpd5startEv@Base 0.1.1
- _ZN6ndhcpd6setLogESt8functionIFviRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEEE@Base 0.1.1
- _ZN6ndhcpd8addRangeERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES7_S7_@Base 0.1.1
+ _ZN6ndhcpd6setLogESt8functionIFviRKSsEE@Base 0.1.1
+ _ZN6ndhcpd8addRangeERKSsS1_S1_@Base 0.1.1
  _ZN6ndhcpd8addRangeEjjj@Base 0.1.1
  _ZN6ndhcpdC1Ev@Base 0.1.1
  _ZN6ndhcpdC2Ev@Base 0.1.1
  _ZN6ndhcpdD1Ev@Base 0.1.1
  _ZN6ndhcpdD2Ev@Base 0.1.1
  _ZNK14ndhcpd_private3logEi@Base 0.1.1
- _ZNK14ndhcpd_private3logEiRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE@Base 0.1.1
+ _ZNK14ndhcpd_private3logEiRKSs@Base 0.1.1
  _ZNK18dhcp_category_impl10equivalentERKSt10error_codei@Base 0.1.1
  _ZNK18dhcp_category_impl4nameEv@Base 0.1.1
- _ZNK18dhcp_category_impl7messageB5cxx11Ei@Base 0.1.1
+ _ZNK18dhcp_category_impl7messageEi@Base 0.1.1
  _ZNK4File6get_fdEv@Base 0.1.1
  _ZNK4File7isValidEv@Base 0.1.1
  _ZNK6ndhcpd3ipsEv@Base 0.1.1
  _ZNK6ndhcpd9isStartedEv@Base 0.1.1
- _ZNKSt5ctypeIcE8do_widenEc@Base 0.1.1
- _ZNSt12system_errorC1ESt10error_codePKc@Base 0.1.1
- _ZNSt12system_errorC2ESt10error_codePKc@Base 0.1.1
+ _ZNSs12_S_constructIPcEES0_T_S1_RKSaIcESt20forward_iterator_tag@Base 0.1.1
+ _ZNSt12system_errorC1ESt10error_codeRKSs@Base 0.1.1
+ _ZNSt12system_errorC1EiRKSt14error_categoryRKSs@Base 0.1.1
+ _ZNSt12system_errorC2ESt10error_codeRKSs@Base 0.1.1
+ _ZNSt12system_errorC2EiRKSt14error_categoryRKSs@Base 0.1.1
+ _ZNSt15basic_stringbufIcSt11char_traitsIcESaIcEED0Ev@Base 0.1.1
+ _ZNSt15basic_stringbufIcSt11char_traitsIcESaIcEED1Ev@Base 0.1.1
+ _ZNSt15basic_stringbufIcSt11char_traitsIcESaIcEED2Ev@Base 0.1.1
  _ZNSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE10_M_destroyEv@Base 0.1.1
  _ZNSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE10_M_releaseEv@Base 0.1.1
+ _ZNSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EED0Ev@Base 0.1.1
+ _ZNSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EED1Ev@Base 0.1.1
+ _ZNSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EED2Ev@Base 0.1.1
  _ZNSt23_Sp_counted_ptr_inplaceINSt6thread5_ImplISt12_Bind_simpleIFSt7_Mem_fnIM14ndhcpd_privateFvvEEPS4_EEEESaISB_ELN9__gnu_cxx12_Lock_policyE2EE10_M_destroyEv@Base 0.1.1
  _ZNSt23_Sp_counted_ptr_inplaceINSt6thread5_ImplISt12_Bind_simpleIFSt7_Mem_fnIM14ndhcpd_privateFvvEEPS4_EEEESaISB_ELN9__gnu_cxx12_Lock_policyE2EE10_M_disposeEv@Base 0.1.1
  _ZNSt23_Sp_counted_ptr_inplaceINSt6thread5_ImplISt12_Bind_simpleIFSt7_Mem_fnIM14ndhcpd_privateFvvEEPS4_EEEESaISB_ELN9__gnu_cxx12_Lock_policyE2EE14_M_get_deleterERKSt9type_info@Base 0.1.1
  _ZNSt23_Sp_counted_ptr_inplaceINSt6thread5_ImplISt12_Bind_simpleIFSt7_Mem_fnIM14ndhcpd_privateFvvEEPS4_EEEESaISB_ELN9__gnu_cxx12_Lock_policyE2EED0Ev@Base 0.1.1
  _ZNSt23_Sp_counted_ptr_inplaceINSt6thread5_ImplISt12_Bind_simpleIFSt7_Mem_fnIM14ndhcpd_privateFvvEEPS4_EEEESaISB_ELN9__gnu_cxx12_Lock_policyE2EED1Ev@Base 0.1.1
  _ZNSt23_Sp_counted_ptr_inplaceINSt6thread5_ImplISt12_Bind_simpleIFSt7_Mem_fnIM14ndhcpd_privateFvvEEPS4_EEEESaISB_ELN9__gnu_cxx12_Lock_policyE2EED2Ev@Base 0.1.1
+ _ZNSt6thread10_Impl_baseD0Ev@Base 0.1.1
+ _ZNSt6thread10_Impl_baseD1Ev@Base 0.1.1
+ _ZNSt6thread10_Impl_baseD2Ev@Base 0.1.1
  _ZNSt6thread5_ImplISt12_Bind_simpleIFSt7_Mem_fnIM14ndhcpd_privateFvvEEPS3_EEE6_M_runEv@Base 0.1.1
  _ZNSt6thread5_ImplISt12_Bind_simpleIFSt7_Mem_fnIM14ndhcpd_privateFvvEEPS3_EEED0Ev@Base 0.1.1
  _ZNSt6thread5_ImplISt12_Bind_simpleIFSt7_Mem_fnIM14ndhcpd_privateFvvEEPS3_EEED1Ev@Base 0.1.1
  _ZNSt6thread5_ImplISt12_Bind_simpleIFSt7_Mem_fnIM14ndhcpd_privateFvvEEPS3_EEED2Ev@Base 0.1.1
  _ZNSt6vectorIjSaIjEE19_M_emplace_back_auxIIRKjEEEvDpOT_@Base 0.1.1
  _ZNSt6vectorIjSaIjEE19_M_emplace_back_auxIJRKjEEEvDpOT_@Base 0.1.1
- _ZNSt7__cxx1115basic_stringbufIcSt11char_traitsIcESaIcEED0Ev@Base 0.1.1
- _ZNSt7__cxx1115basic_stringbufIcSt11char_traitsIcESaIcEED1Ev@Base 0.1.1
- _ZNSt7__cxx1115basic_stringbufIcSt11char_traitsIcESaIcEED2Ev@Base 0.1.1
  _ZNSt8_Rb_treeIN14ndhcpd_private6ipinfoESt4pairIKS1_St10unique_ptrINS0_10lease_dataESt14default_deleteIS5_EEESt10_Select1stIS9_ESt4lessIS1_ESaIS9_EE17_M_emplace_uniqueIIS1_DnEEES2_ISt17_Rb_tree_iteratorIS9_EbEDpOT_@Base 0.1.1
  _ZNSt8_Rb_treeIN14ndhcpd_private6ipinfoESt4pairIKS1_St10unique_ptrINS0_10lease_dataESt14default_deleteIS5_EEESt10_Select1stIS9_ESt4lessIS1_ESaIS9_EE17_M_emplace_uniqueIJS1_DnEEES2_ISt17_Rb_tree_iteratorIS9_EbEDpOT_@Base 0.1.1
  _ZNSt8_Rb_treeIN14ndhcpd_private6ipinfoESt4pairIKS1_St10unique_ptrINS0_10lease_dataESt14default_deleteIS5_EEESt10_Select1stIS9_ESt4lessIS1_ESaIS9_EE8_M_eraseEPSt13_Rb_tree_nodeIS9_E@Base 0.1.1
@@ -121,6 +129,7 @@ libndhcpd0.so.0.1.1 libndhcpd0-0.1.0 #MINVER#
  _ZTV6Socket@Base 0.1.1
  _ZTVNSt6thread10_Impl_baseE@Base 0.1.1
  _ZTVNSt6thread5_ImplISt12_Bind_simpleIFSt7_Mem_fnIM14ndhcpd_privateFvvEEPS3_EEEE@Base 0.1.1
+ _ZTVSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE@Base 0.1.1
  _ZTVSt23_Sp_counted_ptr_inplaceINSt6thread5_ImplISt12_Bind_simpleIFSt7_Mem_fnIM14ndhcpd_privateFvvEEPS4_EEEESaISB_ELN9__gnu_cxx12_Lock_policyE2EE@Base 0.1.1
  ndhcpd_addIp_i@Base 0.1.1
  ndhcpd_addIp_s@Base 0.1.1
