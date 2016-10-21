@@ -1,3 +1,9 @@
+ndhcpd (0.1.1-trusty4) trusty; urgency=medium
+
+  * Fix init script (NAME was lost)
+
+ -- Cyril Margorin <comargo@gmail.com>  Fri, 21 Oct 2016 17:07:12 +0300
+
 ndhcpd (0.1.1-trusty3) trusty; urgency=medium
 
   * Fix init script

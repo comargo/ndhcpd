@@ -13,6 +13,7 @@
 # Author: Cyril Margorin <comargo@gmail.com>
 
 DESC="ndhcpd"
+NAME="ndhcpd"
 DAEMON=/usr/bin/ndhcpd
 SCRIPTNAME=/etc/init.d/$NAME
 
