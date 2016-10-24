@@ -183,7 +183,9 @@ int main(int argc, char *argv[])
     try {
         const auto unlink_fifo(make_scope_exit(std::bind(&unlink, pipe_path.c_str())));
 
+        mode_t oldUmask = umask(0002);
         File fifo(open(pipe_path.c_str(), O_RDWR|O_NONBLOCK));
+        umask(oldUmask);
         ndhcpd srv;
         srv.setLog(logger);
 
