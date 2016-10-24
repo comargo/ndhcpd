@@ -1,3 +1,10 @@
+ndhcpd (0.1.2-xenial1) xenial; urgency=medium
+
+  * Fix pipe file umask
+  * Version v0.1.2
+
+ -- Cyril Margorin <comargo@gmail.com>  Mon, 24 Oct 2016 17:11:10 +0300
+
 ndhcpd (0.1.1-xenial1) xenial; urgency=medium
 
   * Remove compile warnings
