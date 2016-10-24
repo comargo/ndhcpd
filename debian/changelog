@@ -1,3 +1,10 @@
+ndhcpd (0.1.2-trusty1) trusty; urgency=medium
+
+  * Fix pipe file umask
+  * Version v0.1.2
+
+ -- Cyril Margorin <comargo@gmail.com>  Mon, 24 Oct 2016 17:04:04 +0300
+
 ndhcpd (0.1.1-trusty5) trusty; urgency=medium
 
   * Fix init script (init script kills itself)
