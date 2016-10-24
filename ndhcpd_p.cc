@@ -172,6 +172,7 @@ void ndhcpd_private::stop(bool silent)
             log(LOG_INFO) << "Service already stoped";
         }
     }
+    leases.clear();
     server.close();
     event.close();
 }
