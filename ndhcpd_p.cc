@@ -130,9 +130,8 @@ void ndhcpd_private::start()
 
         if(!ifaceName.empty()) {
             struct ifreq ifr;
+            memset(ifr.ifr_name, 0, std::size(ifr.ifr_name));
             ifaceName.copy(ifr.ifr_name, std::size(ifr.ifr_name));
-            //  The resulting character string is not null-terminated.
-            ifr.ifr_name[std::size(ifr.ifr_name)-1] = 0;
             _server.setsockopt(SOL_SOCKET, SO_BINDTODEVICE, ifr);
             get_server_id(_server);
         }
