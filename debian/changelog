@@ -1,3 +1,10 @@
+ndhcpd (0.1.5-trusty1) trusty; urgency=medium
+
+  * Version v0.1.5
+  * Bump version
+
+ -- Cyril Margorin <comargo@gmail.com>  Thu, 09 Mar 2017 21:17:16 +0300
+
 ndhcpd (0.1.4-trusty2) trusty; urgency=medium
 
   * Bump version
