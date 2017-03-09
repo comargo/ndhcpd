@@ -12,7 +12,7 @@ Homepage: https://github.com/comargo/ndhcpd
 Vcs-Git: https://github.com/comargo/ndhcpd.git
 Vcs-Browser: https://github.com/comargo/ndhcpd
 
-Package: libndhcpd0-0.1.3
+Package: libndhcpd0-0.1.4
 Section: contrib/libs
 Architecture: any
 Depends: 
@@ -27,7 +27,7 @@ Priority: extra
 Architecture: any
 Depends: 
  ${misc:Depends},
- libndhcpd0-0.1.3 (= ${binary:Version}), 
+ libndhcpd0-0.1.4 (= ${binary:Version}), 
 Description: Nano-DHCP server (dbg)
  Very simple dhcp server implementation.
 
@@ -36,7 +36,7 @@ Section: contrib/libdevel
 Architecture: any
 Depends: 
  ${misc:Depends},
- libndhcpd0-0.1.3 (= ${binary:Version}), 
+ libndhcpd0-0.1.4 (= ${binary:Version}), 
 Description: Nano-DHCP server (dev)
  Very simple dhcp server implementation.
 
@@ -46,7 +46,7 @@ Architecture: any
 Depends: 
  ${shlibs:Depends},
  ${misc:Depends},
- libndhcpd0-0.1.3 (= ${binary:Version})
+ libndhcpd0-0.1.4 (= ${binary:Version})
 Description: Nano-DHCP server
  Very simple dhcp server implementation.
 

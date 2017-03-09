@@ -1,3 +1,9 @@
+ndhcpd (0.1.4-trusty2) trusty; urgency=medium
+
+  * Bump version
+
+ -- Cyril Margorin <comargo@gmail.com>  Thu, 09 Mar 2017 11:54:17 +0300
+
 ndhcpd (0.1.4-trusty1) trusty; urgency=medium
 
   * Fix device name copying
