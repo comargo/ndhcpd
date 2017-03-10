@@ -91,7 +91,8 @@ void ndhcpd::setLog(ndhcpd::logfn_t logfn)
 ndhcpd_t ndhcpd_create() __THROW
 {
     try {
-        return reinterpret_cast<ndhcpd_t>(new ndhcpd());
+        ndhcpd *instance = new ndhcpd();
+        return reinterpret_cast<ndhcpd_t>(instance);
     }
     catch(...) {
         return nullptr;
