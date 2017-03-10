@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(ndhcpd)
 
 include(GNUInstallDirs)
+include(PVS-Studio.cmake)
 
 set(ndhcpd_VERSION_MAJOR 0)
 set(ndhcpd_VERSION_MINOR 1)
@@ -75,3 +76,13 @@ install(FILES ${CMAKE_BINARY_DIR}/${SERVICE_INSTALL_PATH}/ndhcpd.service
 		COMPONENT bin)
 install(CODE "MESSAGE(\"To run service as non-root user the capabilities should be set using setcap(8) command.\")")
 install(CODE "MESSAGE(\"# /sbin/setcap cap_net_bind_service,cap_net_raw,cap_net_admin+epi ${CMAKE_INSTALL_PREFIX}/bin/ndhcpd\")")
+
+pvs_studio_add_target(TARGET analyze
+		FORMAT tasklist
+                OUTPUT FORMAT errorfile
+		PREPROCESSOR gcc
+                LOG "${PROJECT_BINARY_DIR}/target.plog"
+		ANALYZE ndhcpd-app ndhcpd${ndhcpd_VERSION_MAJOR}
+                CXX_FLAGS "-I${PROJECT_SOURCE_DIR}/include"
+                C_FLAGS "-I${PROJECT_SOURCE_DIR}/include"
+		)
