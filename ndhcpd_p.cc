@@ -66,6 +66,8 @@ ndhcpd_private::ndhcpd_private()
     dstAddr.sin_port = port->s_port;
     endservent();
 
+    server_id.s_addr = INADDR_NONE;
+
 
 }
 
