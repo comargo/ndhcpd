@@ -143,7 +143,9 @@ int main(int argc, char *argv[])
         max_loglevel = debuglevel;
     }
 
+    mode_t oldMask = umask(002);
     int ret = mkfifo(pipe_path.c_str(), S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP );
+    umask(oldMask);
     if(ret < 0) {
         logger(LOG_WARNING, std::system_error(errno, std::system_category(), "mkfifo()").what());
     }
