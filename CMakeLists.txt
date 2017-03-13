@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(ndhcpd)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+
 include(GNUInstallDirs)
-include(PVS-Studio.cmake)
+include(PVS-Studio)
 
 set(ndhcpd_VERSION_MAJOR 0)
 set(ndhcpd_VERSION_MINOR 1)
