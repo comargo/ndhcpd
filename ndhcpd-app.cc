@@ -228,9 +228,7 @@ int main(int argc, char *argv[])
             buf.resize(len);
 
             std::vector<std::string> cmds;
-            for(auto bufIter = buf.begin();
-                bufIter != buf.end();
-                /*we will iterate manually*/) {
+            for(auto bufIter = buf.begin(); bufIter != buf.end(); /*we will iterate manually*/) {
                 auto nextIter = std::find(bufIter, buf.end(), '\n');
                 cmds.emplace_back(bufIter, nextIter);
                 bufIter = nextIter;
