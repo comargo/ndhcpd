@@ -1,16 +1,21 @@
 cmake_minimum_required(VERSION 2.8)
 project(ndhcpd)
 
+# Set modules path
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
+#Load modules
 include(GNUInstallDirs)
 include(PVS-Studio)
+find_package(Threads REQUIRED)
 
+#Library version variables
 set(ndhcpd_VERSION_MAJOR 0)
 set(ndhcpd_VERSION_MINOR 1)
 set(ndhcpd_VERSION_PATCH 5)
 set(ndhcpd_VERSION_STRING ${ndhcpd_VERSION_MAJOR}.${ndhcpd_VERSION_MINOR}.${ndhcpd_VERSION_PATCH})
 
+#Common compilation files
 if (CMAKE_VERSION VERSION_LESS "3.1")
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set (CMAKE_CXX_FLAGS "--std=gnu++11 ${CMAKE_CXX_FLAGS}")
@@ -19,11 +24,11 @@ else ()
     set(CMAKE_CXX_STANDARD 11)
 endif ()
 
-find_package (Threads REQUIRED)
+#Common compile options
+add_compile_options(-pedantic -Wall)
 
 
-
-
+# Library
 set(libndhcpd_src ndhcpd.cc
                 ndhcpd_p.cc ndhcpd_p.hpp
                 dhcp_packet.cc dhcp_packet.hpp
@@ -37,18 +42,17 @@ target_include_directories(ndhcpd${ndhcpd_VERSION_MAJOR}
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>)
 target_link_libraries(ndhcpd${ndhcpd_VERSION_MAJOR} ${CMAKE_THREAD_LIBS_INIT})
-target_compile_options(ndhcpd${ndhcpd_VERSION_MAJOR} PRIVATE -pedantic -Wall)
 set_target_properties(ndhcpd${ndhcpd_VERSION_MAJOR} PROPERTIES
     FRAMEWORK TRUE
     VERSION ${ndhcpd_VERSION_STRING}
     PUBLIC_HEADER "${libndhcpd_inc}")
 
+# Daemon
 add_executable(ndhcpd-app ndhcpd-app.cc)
 set_target_properties(ndhcpd-app PROPERTIES OUTPUT_NAME ndhcpd)
 target_link_libraries(ndhcpd-app ndhcpd${ndhcpd_VERSION_MAJOR})
-target_compile_options(ndhcpd-app PRIVATE -pedantic -Wall)
-#set_target_properties(ndhcpd-app PROPERTIES VERSION ${ndhcpd_VERSION_STRING})
 
+# Installation
 install(TARGETS ndhcpd${ndhcpd_VERSION_MAJOR} ndhcpd-app
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib
@@ -59,6 +63,7 @@ install(TARGETS ndhcpd${ndhcpd_VERSION_MAJOR} ndhcpd-app
 install(CODE "MESSAGE(\"To run service as non-root user the capabilities should be set using setcap(8) command.\")")
 install(CODE "MESSAGE(\"# /sbin/setcap cap_net_bind_service,cap_net_raw,cap_net_admin+epi ${CMAKE_INSTALL_PREFIX}/bin/ndhcpd\")")
 
+# PVS-Studio analyze target
 pvs_studio_add_target(TARGET analyze
 		FORMAT tasklist
                 OUTPUT FORMAT errorfile
