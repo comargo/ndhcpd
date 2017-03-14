@@ -21,21 +21,6 @@ endif ()
 
 find_package (Threads REQUIRED)
 
-option(USER_INSTALLATION
-	"Install in user home directory" OFF)
-if(USER_INSTALLATION)
-	set(CMAKE_INSTALL_PREFIX $ENV{HOME} CACHE PATH "Install path prefix, prepended onto install directories." FORCE)
-	set(SERVICE_INSTALL_PATH .config/systemd/user CACHE STRING "Systemd unit installation path" FORCE)
-	set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-	set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-	list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
-	if("${isSystemDir}" STREQUAL "-1")
-		set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-	endif("${isSystemDir}" STREQUAL "-1")
-
-else(USER_INSTALLATION)
-	set(SERVICE_INSTALL_PATH lib/systemd/system CACHE STRING "Systemd unit installation path")
-endif(USER_INSTALLATION)
 
 
 
@@ -71,11 +56,6 @@ install(TARGETS ndhcpd${ndhcpd_VERSION_MAJOR} ndhcpd-app
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT dev
  )
 
-configure_file(ndhcpd.service.in ${SERVICE_INSTALL_PATH}/ndhcpd.service)
-install(FILES ${CMAKE_BINARY_DIR}/${SERVICE_INSTALL_PATH}/ndhcpd.service 
-		DESTINATION ${SERVICE_INSTALL_PATH}
-		PERMISSIONS OWNER_WRITE OWNER_READ GROUP_WRITE GROUP_READ WORLD_READ
-		COMPONENT bin)
 install(CODE "MESSAGE(\"To run service as non-root user the capabilities should be set using setcap(8) command.\")")
 install(CODE "MESSAGE(\"# /sbin/setcap cap_net_bind_service,cap_net_raw,cap_net_admin+epi ${CMAKE_INSTALL_PREFIX}/bin/ndhcpd\")")
 
