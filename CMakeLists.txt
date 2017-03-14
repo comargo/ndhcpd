@@ -27,6 +27,9 @@ endif ()
 #Common compile options
 add_compile_options(-pedantic -Wall)
 
+#Configuration file
+configure_file(config.h.in config.h)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # Library
 set(libndhcpd_src ndhcpd.cc
