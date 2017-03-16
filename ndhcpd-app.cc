@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    log.info("Starting...");
+    log.notice("Starting...");
 
     // Setup signal handlers
     struct sigaction sa;
@@ -215,10 +215,12 @@ int main(int argc, char *argv[])
             }
 
             for(std::string cmd : cmds) {
+                log.debugStream() << "Command \"" << cmd << "\"";
                 std::string cmdParam(cmd, 1);
                 std::string::size_type pos;
                 switch (cmd[0]) {
                 case 'i': // set interface name
+                    log.infoStream() << "Set interface " << cmdParam;
                     srv.setInterfaceName(cmdParam);
                     break;
                 case 'a':
@@ -231,18 +233,22 @@ int main(int argc, char *argv[])
                     if((pos = cmdParam.find('-')) != std::string::npos) {
                         std::string ipFrom(cmdParam, 0, pos);
                         std::string ipTo(cmdParam, pos+1);
+                        log.infoStream() << "Add IP range " << ipFrom << "-" << ipTo << "/" << subnet;
                         srv.addRange(ipFrom, ipTo, subnet);
                     }
                     else {
+                        log.infoStream() << "Add IP address" << cmdParam << "/" << subnet;
                         srv.addIp(cmdParam,subnet);
                     }
                 }
                     break;
                 case 's':
                     if(cmd == "start") {
+                        log.info("Start service");
                         srv.start();
                     }
                     else if(cmd == "stop"){
+                        log.info("Stop service");
                         srv.stop();
                     }
                 case 'q':
@@ -260,6 +266,6 @@ int main(int argc, char *argv[])
         log.error(ex.what());
         return EXIT_FAILURE;
     }
-    log.info("Exiting...");
+    log.notice("Exiting...");
     return EXIT_SUCCESS;
 }
