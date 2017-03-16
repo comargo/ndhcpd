@@ -1,0 +1,8 @@
+// Version
+#define ndhcpd_VERSION_MAJOR @ndhcpd_VERSION_MAJOR@
+#define ndhcpd_VERSION_MINOR @ndhcpd_VERSION_MINOR@
+#define ndhcpd_VERSION_PATCH @ndhcpd_VERSION_PATCH@
+#define ndhcpd_VERSION_STRING "@ndhcpd_VERSION_STRING@"
+
+// Directories
+#define SYSCONFDIR "@CMAKE_INSTALL_FULL_SYSCONFDIR@"

@@ -21,9 +21,6 @@ int ndhcpd_start(ndhcpd_t _ndhcpd) __THROW;
 int ndhcpd_stop(ndhcpd_t _ndhcpd) __THROW;
 int ndhcpd_isStarted(const ndhcpd_t _ndhcpd) __THROW;
 
-typedef void (*ndhcpd_logfn_t)(int level, const char *msg);
-void ndhcpd_setLog(ndhcpd_t _ndhcpd, ndhcpd_logfn_t logfn) __THROW;
-
 }
 
 #endif//NDHCPD_H
