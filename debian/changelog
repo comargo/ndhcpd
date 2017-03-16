@@ -1,3 +1,22 @@
+ndhcpd (0.2.0-trusty1) trusty; urgency=medium
+
+  * Add PVS-Studio support
+  * warning: V572 It is odd that the object which was created using 
+    'new' operator is immediately cast to another type.
+  * error: V730 Not all members of a class are initialized inside 
+    the constructor. Consider inspecting: server_id.
+  * Fix mask on pipe creation
+  * Cosmetic changes
+  * Move local CMake modules to cmake/Modules directory
+  * Remove 'User Installation' option and service file setting
+  * Pretty print CMakeLists.txt file
+  * Add config.h file support
+  * Export *.cmake files
+  * Eliminate major version from library name
+  * Add log4cpp support
+
+ -- Cyril Margorin <comargo@gmail.com>  Thu, 16 Mar 2017 17:13:16 +0300
+
 ndhcpd (0.1.5-trusty1) trusty; urgency=medium
 
   * Version v0.1.5
