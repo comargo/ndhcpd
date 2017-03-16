@@ -30,10 +30,6 @@ public:
     void stop();
     bool isStarted() const;
 
-public:
-    typedef std::function<void(int, const std::string&)> logfn_t;
-    void setLog(logfn_t logfn);
-
 private:
     std::unique_ptr<ndhcpd_private> d;
 };

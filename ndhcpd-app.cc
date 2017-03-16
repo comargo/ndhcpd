@@ -1,4 +1,7 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <ndhcpd.hpp>
+#include "config.h"
 
 #include <getopt.h>
 #include <iostream>
@@ -15,11 +18,12 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <poll.h>
-#define SYSLOG_NAMES 1
-#include <syslog.h>
 #include <string.h>
 
 #include "file.hpp"
+
+#include <log4cpp/PropertyConfigurator.hh>
+#include <log4cpp/Category.hh>
 
 static bool volatile sStop = false;
 
@@ -55,45 +59,46 @@ scope_exit<T> make_scope_exit(T&& exitFn)
     return scope_exit<T>(std::forward<T>(exitFn));
 }
 
-
-static int max_loglevel;
-
-void logger(int level, const std::string &msg) {
-    if(max_loglevel < 0) { // Use -1 as syslog
-        syslog(level, "%s", msg.c_str());
-    } else if(level <= max_loglevel){
-        const char *levelName = std::find_if(std::begin(prioritynames), std::prev(std::end(prioritynames)), [level](const CODE& code){
-            return code.c_val == level;
-        })->c_name;
-
-        std::cerr << levelName << ": " << msg << std::endl;
-    }
-}
-
 void sig_handler_exit(int signo, siginfo_t *siginfo, void *ctx)
 {
-    std::ostringstream str;
-    str << "Caught signal " << signo << " from " << siginfo->si_pid;
-    logger(LOG_INFO, str.str());
+    log4cpp::Category::getInstance("ndhcpd.app").infoStream()
+            << "Caught signal " << signo << " from " << siginfo->si_pid;
     sStop = true;
 }
 
 
 int main(int argc, char *argv[])
 {
+    std::vector<std::string> logFileNames;
+    logFileNames.push_back(std::string(SYSCONFDIR) + "/ndhcpd-app.log.properties");
+    logFileNames.push_back("./ndhcpd-app.log.properties");
+    const char* envLogConfigFileName = getenv("NDHCPD_LOG");
+    if(envLogConfigFileName) {
+        logFileNames.push_back(envLogConfigFileName);
+    }
+
+    for(auto logConfigFileName : logFileNames) {
+        try {
+            log4cpp::PropertyConfigurator::configure(logConfigFileName);
+            log4cpp::Category::getInstance("ndhcpd.app").debugStream() << "NDHCPD loaded log properties from " << logConfigFileName;
+        }
+        catch(const log4cpp::ConfigureFailure &fail) {
+        }
+    }
+
+    log4cpp::Category &log = log4cpp::Category::getInstance("ndhcpd.app");
+
+
     std::vector<option> options = {
         {"pipe", required_argument, nullptr, 'p'},
         {"group", required_argument, nullptr, 'g'},
         {"foreground", no_argument, nullptr, 'f'},
-        {"syslog", required_argument, nullptr, 's'},
 	{0,0,0,0}
     };
 
     std::string pipe_path = "/var/tmp/ndhcpd";
     std::string pipe_group = "netdev";
     bool daemonize = true;
-    int debuglevel = LOG_ERR;
-    bool useDebugLevel = false;
 
     for(;;) {
         int opt_index;
@@ -111,58 +116,36 @@ int main(int argc, char *argv[])
         case 'f':
             daemonize = false;
             break;
-        case 's':
-            debuglevel = std::find_if(std::begin(prioritynames), std::prev(std::end(prioritynames)), [](const CODE& code){
-                return strcmp(code.c_name, optarg) == 0;
-            })->c_val;
-            if(debuglevel == -1) {
-                char *endptr;
-                debuglevel = strtoul(optarg, &endptr, 0);
-            }
-            useDebugLevel = true;
-            break;
-        case 'v':
-            debuglevel++;
-            useDebugLevel = true;
-            break;
         default:
             break;
         }
     }
 
-    // Setup logging
-    if(daemonize) {
-        if(useDebugLevel) {
-            setlogmask(LOG_UPTO(debuglevel));
-        }
-        max_loglevel = -1;
-    }
-    else {
-        max_loglevel = debuglevel;
-    }
-
+    mode_t oldMask = umask(002);
     int ret = mkfifo(pipe_path.c_str(), S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP );
+    umask(oldMask);
+    log.infoStream() << "Creating FIFO " << pipe_path;
     if(ret < 0) {
-        logger(LOG_WARNING, std::system_error(errno, std::system_category(), "mkfifo()").what());
+        log.warn(std::system_error(errno, std::system_category(), "mkfifo()").what());
     }
 
     struct group* gr = getgrnam(pipe_group.c_str());
     if(!gr) {
-        logger(LOG_WARNING, std::system_error(errno, std::system_category(), "getgrnam()").what());
+        log.warn(std::system_error(errno, std::system_category(), "getgrnam()").what());
     }
     if(chown(pipe_path.c_str(), -1, gr->gr_gid) != 0) {
-        logger(LOG_WARNING, std::system_error(errno, std::system_category(), "chown()").what());
+        log.warn(std::system_error(errno, std::system_category(), "chown()").what());
     }
 
     // Daemonize point
     if(daemonize) {
-	if(daemon(0,0) != 0) {
-        logger(LOG_ERR, std::system_error(errno, std::system_category(), "daemon()").what());
+        if(daemon(0,0) != 0) {
+            log.error(std::system_error(errno, std::system_category(), "daemon()").what());
             return EXIT_FAILURE;
         }
     }
 
-    logger(LOG_INFO, "Starting...");
+    log.info("Starting...");
 
     // Setup signal handlers
     struct sigaction sa;
@@ -187,8 +170,6 @@ int main(int argc, char *argv[])
         File fifo(open(pipe_path.c_str(), O_RDWR|O_NONBLOCK));
         umask(oldUmask);
         ndhcpd srv;
-        srv.setLog(logger);
-
         while(!sStop) {
             std::vector<char> buf(256);
 
@@ -224,9 +205,7 @@ int main(int argc, char *argv[])
             buf.resize(len);
 
             std::vector<std::string> cmds;
-            for(auto bufIter = buf.begin();
-                bufIter != buf.end();
-                /*we will iterate manually*/) {
+            for(auto bufIter = buf.begin(); bufIter != buf.end(); /*we will iterate manually*/) {
                 auto nextIter = std::find(bufIter, buf.end(), '\n');
                 cmds.emplace_back(bufIter, nextIter);
                 bufIter = nextIter;
@@ -268,7 +247,7 @@ int main(int argc, char *argv[])
                     }
                 case 'q':
                     if(cmd == "quit") {
-                        logger(LOG_INFO, "Caught 'quit' command. Exiting...");
+                        log.info("Caught 'quit' command. Exiting...");
                         return EXIT_SUCCESS;
                     }
                 default:
@@ -278,9 +257,9 @@ int main(int argc, char *argv[])
         }
     }
     catch(const std::exception &ex) {
-        logger(LOG_ERR, ex.what());
+        log.error(ex.what());
         return EXIT_FAILURE;
     }
-    logger(LOG_INFO, "Exiting...");
+    log.info("Exiting...");
     return EXIT_SUCCESS;
 }
