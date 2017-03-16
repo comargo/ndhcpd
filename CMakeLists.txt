@@ -15,8 +15,6 @@ set(ndhcpd_VERSION_MINOR 1)
 set(ndhcpd_VERSION_PATCH 5)
 set(ndhcpd_VERSION_STRING ${ndhcpd_VERSION_MAJOR}.${ndhcpd_VERSION_MINOR}.${ndhcpd_VERSION_PATCH})
 
-set(ndhcpd_NAME ${CMAKE_PROJECT_NAME}${ndhcpd_VERSION_MAJOR})
-
 #Common compilation files
 if (CMAKE_VERSION VERSION_LESS "3.1")
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -41,13 +39,13 @@ set(libndhcpd_src ndhcpd.cc
                 file.cc file.hpp
                 socket.cc socket.hpp)
 set(libndhcpd_inc include/ndhcpd.hpp include/ndhcpd.h)
-add_library(${ndhcpd_NAME} SHARED ${libndhcpd_src} ${libndhcpd_inc})
-target_include_directories(${ndhcpd_NAME}
+add_library(ndhcpd SHARED ${libndhcpd_src} ${libndhcpd_inc})
+target_include_directories(ndhcpd
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>)
-target_link_libraries(${ndhcpd_NAME} ${CMAKE_THREAD_LIBS_INIT})
-set_target_properties(${ndhcpd_NAME} PROPERTIES
+target_link_libraries(ndhcpd ${CMAKE_THREAD_LIBS_INIT})
+set_target_properties(ndhcpd PROPERTIES
     FRAMEWORK TRUE
     VERSION ${ndhcpd_VERSION_STRING}
     SOVERSION ${ndhcpd_VERSION_MAJOR}
@@ -56,17 +54,17 @@ set_target_properties(${ndhcpd_NAME} PROPERTIES
 # Daemon
 add_executable(ndhcpd-app ndhcpd-app.cc)
 set_target_properties(ndhcpd-app PROPERTIES OUTPUT_NAME ndhcpd)
-target_link_libraries(ndhcpd-app ${ndhcpd_NAME})
+target_link_libraries(ndhcpd-app ndhcpd)
 
 # Install library
-install(TARGETS ${ndhcpd_NAME} EXPORT ${ndhcpd_NAME}
+install(TARGETS ndhcpd EXPORT ndhcpd
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT dev
  )
-install(EXPORT ${ndhcpd_NAME} DESTINATION ${CMAKE_INndhcpdSTALL_LIBDIR}/cmake/${ndhcpd_NAME})
-install(FILES ${ndhcpd_NAME}-config.cmake DESTINATION ${CMAKE_INndhcpdSTALL_LIBDIR}/cmake/${ndhcpd_NAME})
+install(EXPORT ndhcpd DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ndhcpd)
+install(FILES ndhcpd-config.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ndhcpd)
 
 # Install daemon
 install(TARGETS ndhcpd-app
@@ -82,7 +80,7 @@ pvs_studio_add_target(TARGET analyze
                 OUTPUT FORMAT errorfile
 		PREPROCESSOR gcc
                 LOG "${PROJECT_BINARY_DIR}/target.plog"
-		ANALYZE ndhcpd-app ${ndhcpd_NAME}
+		ANALYZE ndhcpd-app ndhcpd
                 CXX_FLAGS "-I${PROJECT_SOURCE_DIR}/include"
                 C_FLAGS "-I${PROJECT_SOURCE_DIR}/include"
 		)
