@@ -14,7 +14,7 @@ pkg_check_modules(log4cpp REQUIRED log4cpp)
 #Library version variables
 set(ndhcpd_VERSION_MAJOR 0)
 set(ndhcpd_VERSION_MINOR 2)
-set(ndhcpd_VERSION_PATCH 0)
+set(ndhcpd_VERSION_PATCH 1)
 set(ndhcpd_VERSION_STRING ${ndhcpd_VERSION_MAJOR}.${ndhcpd_VERSION_MINOR}.${ndhcpd_VERSION_PATCH})
 
 #Common compilation files
