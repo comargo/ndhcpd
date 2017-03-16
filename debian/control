@@ -5,14 +5,16 @@ Build-Depends:
  debhelper (>=9),
  dh-exec,
  dh-systemd (>=1.5),
- cmake (>=2.8)
+ cmake (>=2.8),
+ pkg-config,
+ liblog4cpp5-dev
 Standards-Version: 3.9.7
 Section: contrib/net
 Homepage: https://github.com/comargo/ndhcpd
 Vcs-Git: https://github.com/comargo/ndhcpd.git
 Vcs-Browser: https://github.com/comargo/ndhcpd
 
-Package: libndhcpd0-0.1.5
+Package: libndhcpd0
 Section: contrib/libs
 Architecture: any
 Depends: 
@@ -27,7 +29,7 @@ Priority: extra
 Architecture: any
 Depends: 
  ${misc:Depends},
- libndhcpd0-0.1.5 (= ${binary:Version}), 
+ libndhcpd0 (= ${binary:Version}), 
 Description: Nano-DHCP server (dbg)
  Very simple dhcp server implementation.
 
@@ -36,7 +38,7 @@ Section: contrib/libdevel
 Architecture: any
 Depends: 
  ${misc:Depends},
- libndhcpd0-0.1.5 (= ${binary:Version}), 
+ libndhcpd0 (= ${binary:Version}), 
 Description: Nano-DHCP server (dev)
  Very simple dhcp server implementation.
 
@@ -46,7 +48,7 @@ Architecture: any
 Depends: 
  ${shlibs:Depends},
  ${misc:Depends},
- libndhcpd0-0.1.5 (= ${binary:Version})
+ libndhcpd0 (= ${binary:Version})
 Description: Nano-DHCP server
  Very simple dhcp server implementation.
 

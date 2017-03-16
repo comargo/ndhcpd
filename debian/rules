@@ -18,7 +18,7 @@
 	dh $@ --buildsystem=cmake --with=systemd
 
 override_dh_strip:
-	dh_strip -plibndhcpd0-0.1.5 --dbg-package=libndhcpd0-dbg
+	dh_strip -plibndhcpd0 --dbg-package=libndhcpd0-dbg
 	dh_strip -pndhcpd --dbg-package=ndhcpd-dbg
 
 
