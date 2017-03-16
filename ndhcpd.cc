@@ -82,11 +82,6 @@ bool ndhcpd::isStarted() const
     return d->serverThread.joinable();
 }
 
-void ndhcpd::setLog(ndhcpd::logfn_t logfn)
-{
-    d->logfn = logfn;
-}
-
 // C interface implementation
 #include <ndhcpd.h>
 ndhcpd_t ndhcpd_create() __THROW
@@ -182,10 +177,4 @@ int ndhcpd_isStarted(const ndhcpd_t _ndhcpd) __THROW
 {
     ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
     return p->isStarted()?1:0;
-}
-
-void ndhcpd_setLog(ndhcpd_t _ndhcpd, ndhcpd_logfn_t logfn) __THROW
-{
-    ndhcpd* p = reinterpret_cast<ndhcpd*>(_ndhcpd);
-    p->setLog([logfn](int level, std::string msg){return logfn(level, msg.c_str());});
 }

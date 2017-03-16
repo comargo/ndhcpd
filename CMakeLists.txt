@@ -8,11 +8,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 include(GNUInstallDirs)
 include(PVS-Studio)
 find_package(Threads REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(log4cpp REQUIRED log4cpp)
 
 #Library version variables
 set(ndhcpd_VERSION_MAJOR 0)
-set(ndhcpd_VERSION_MINOR 1)
-set(ndhcpd_VERSION_PATCH 5)
+set(ndhcpd_VERSION_MINOR 2)
+set(ndhcpd_VERSION_PATCH 0)
 set(ndhcpd_VERSION_STRING ${ndhcpd_VERSION_MAJOR}.${ndhcpd_VERSION_MINOR}.${ndhcpd_VERSION_PATCH})
 
 #Common compilation files
@@ -43,8 +45,10 @@ add_library(ndhcpd SHARED ${libndhcpd_src} ${libndhcpd_inc})
 target_include_directories(ndhcpd
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-	$<INSTALL_INTERFACE:include>)
-target_link_libraries(ndhcpd ${CMAKE_THREAD_LIBS_INIT})
+        $<INSTALL_INTERFACE:include>
+    PRIVATE
+        ${log4cpp_INCLUDE_DIRS})
+target_link_libraries(ndhcpd ${CMAKE_THREAD_LIBS_INIT} ${log4cpp_LIBRARY_DIRS} ${log4cpp_LIBRARIES})
 set_target_properties(ndhcpd PROPERTIES
     FRAMEWORK TRUE
     VERSION ${ndhcpd_VERSION_STRING}
@@ -54,7 +58,10 @@ set_target_properties(ndhcpd PROPERTIES
 # Daemon
 add_executable(ndhcpd-app ndhcpd-app.cc)
 set_target_properties(ndhcpd-app PROPERTIES OUTPUT_NAME ndhcpd)
-target_link_libraries(ndhcpd-app ndhcpd)
+target_include_directories(ndhcpd-app
+    PRIVATE
+        ${log4cpp_INCLUDE_DIRS})
+target_link_libraries(ndhcpd-app ndhcpd ${log4cpp_LIBRARY_DIRS} ${log4cpp_LIBRARIES})
 
 # Install library
 install(TARGETS ndhcpd EXPORT ndhcpd
@@ -70,6 +77,7 @@ install(FILES ndhcpd-config.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ndhc
 install(TARGETS ndhcpd-app
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin
  )
+install(FILES ndhcpd-app.log.properties DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/ndhcpd)
 
 install(CODE "MESSAGE(\"To run service as non-root user the capabilities should be set using setcap(8) command.\")")
 install(CODE "MESSAGE(\"# /sbin/setcap cap_net_bind_service,cap_net_raw,cap_net_admin+epi ${CMAKE_INSTALL_PREFIX}/bin/ndhcpd\")")

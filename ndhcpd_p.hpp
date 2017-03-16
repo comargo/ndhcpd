@@ -18,6 +18,8 @@
 
 #include "dhcp_packet.hpp"
 
+#include <log4cpp/Category.hh>
+
 
 class ndhcpd_private
 {
@@ -38,7 +40,6 @@ public:
         std::chrono::steady_clock::time_point lease_start;
     };
 
-    ndhcpd::logfn_t logfn;
     struct ipinfo {
         ipinfo(uint32_t ip_, uint32_t subnet_)
             : ip(ip_), subnet(subnet_)
@@ -77,33 +78,6 @@ public:
         std::chrono::steady_clock::time_point now;
     };
 
-    void log(int severity, const std::string &logStr) const;
-    class Logger
-    {
-    public:
-        Logger(const ndhcpd_private *that, int severity)
-            : stream(new std::ostringstream)
-            , that(that)
-            , severity(severity)
-        { }
-        Logger(Logger &&) = default;
-
-        ~Logger()
-        {
-            that->log(severity, stream->str());
-        }
-        template <class T>
-        std::ostream& operator<<(const T &msg) {
-            return (*stream) << msg;
-        }
-
-    private:
-        std::unique_ptr<std::ostringstream> stream;
-        const ndhcpd_private *that;
-        int severity;
-    };
-    Logger log(int severity) const;
-
     void start();
     void stop(bool silent = false);
 
@@ -134,6 +108,8 @@ public:
     struct sockaddr_in srcAddr;
     struct sockaddr_in dstAddr;
     std::string ifaceName;
+
+    log4cpp::Category &log;
 };
 
 #endif//NDHCPD_NDHCPD_P_HPP
