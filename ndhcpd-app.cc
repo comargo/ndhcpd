@@ -237,7 +237,7 @@ int main(int argc, char *argv[])
                         srv.addRange(ipFrom, ipTo, subnet);
                     }
                     else {
-                        log.infoStream() << "Add IP address" << cmdParam << "/" << subnet;
+                        log.infoStream() << "Add IP address " << cmdParam << "/" << subnet;
                         srv.addIp(cmdParam,subnet);
                     }
                 }
