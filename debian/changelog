@@ -3,6 +3,7 @@ ndhcpd (0.2.1-xenial1) xenial; urgency=medium
   * Add some logging
   * v0.2.1
   * Add configuration files
+  * Remove unneeded debian/ndhcpd.init
 
  -- Cyril Margorin <comargo@gmail.com>  Fri, 17 Mar 2017 12:32:49 +0300
 
