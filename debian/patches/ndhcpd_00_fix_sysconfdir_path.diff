@@ -11,3 +11,13 @@ Index: ndhcpd/CMakeLists.txt
  
  install(CODE "MESSAGE(\"To run service as non-root user the capabilities should be set using setcap(8) command.\")")
  install(CODE "MESSAGE(\"# /sbin/setcap cap_net_bind_service,cap_net_raw,cap_net_admin+epi ${CMAKE_INSTALL_PREFIX}/bin/ndhcpd\")")
+Index: ndhcpd/config.h.in
+===================================================================
+--- ndhcpd.orig/config.h.in
++++ ndhcpd/config.h.in
+@@ -5,4 +5,4 @@
+ #define ndhcpd_VERSION_STRING "@ndhcpd_VERSION_STRING@"
+ 
+ // Directories
+-#define SYSCONFDIR "@CMAKE_INSTALL_FULL_SYSCONFDIR@/ndhcpd"
++#define SYSCONFDIR "/etc/ndhcpd"

@@ -1,3 +1,9 @@
+ndhcpd (0.2.2-trusty1) trusty; urgency=medium
+
+  * Fix sysconf directory path in config.h.in file
+
+ -- Cyril Margorin <comargo@gmail.com>  Fri, 17 Mar 2017 15:53:13 +0300
+
 ndhcpd (0.2.1-trusty1) trusty; urgency=medium
 
   * Add some logging
