@@ -132,7 +132,7 @@ void ndhcpd_private::start()
 {
     try {
         if(serverThread.joinable()) {
-            log.info("Server thread already started");
+            log.notice("Server thread already started");
             return;
         }
         stop_server = false;
@@ -142,11 +142,15 @@ void ndhcpd_private::start()
         _server.setsockopt(SOL_SOCKET, SO_BROADCAST, true);
 
         if(!ifaceName.empty()) {
+            log.infoStream() << "Starting bound to interface " << ifaceName;
             struct ifreq ifr;
             memset(ifr.ifr_name, 0, std::size(ifr.ifr_name));
             ifaceName.copy(ifr.ifr_name, std::size(ifr.ifr_name));
             _server.setsockopt(SOL_SOCKET, SO_BINDTODEVICE, ifr);
             get_server_id(_server);
+        }
+        else {
+            log.infoStream() << "Starting unbound";
         }
 
         sockaddr_in addr = srcAddr;
@@ -158,7 +162,7 @@ void ndhcpd_private::start()
         std::swap(event, _event);
 
         serverThread = std::thread(std::mem_fn(&ndhcpd_private::process_dhcp), this);
-        log.info("Service started");
+        log.notice("Service started");
     }
     catch(const std::system_error &err) {
         log.error(err.what());
@@ -175,9 +179,7 @@ void ndhcpd_private::stop(bool silent)
     eventfd_write(event, 1);
     if(serverThread.joinable()) {
         serverThread.join();
-        if(!silent) {
-            log.info("Service stoped");
-        }
+        log.notice("Service stoped");
     }
     else {
         if(!silent) {
@@ -217,6 +219,8 @@ void ndhcpd_private::process_dhcp()
                    try {
                        if(server_id.s_addr == INADDR_NONE) {
                            get_server_id(server);
+                           char server_id_str[256];
+                           log.infoStream() << "Got server_id: " << inet_ntop(AF_INET, &server_id, server_id_str, sizeof(server_id_str));
                        }
                        struct dhcp_packet in_packet;
                        in_packet = recieve_packet(fd.fd);
