@@ -1,3 +1,9 @@
+ndhcpd (0.2.2-xenial1) xenial; urgency=medium
+
+  * Fix sysconf directory path in config.h.in file
+
+ -- Cyril Margorin <comargo@gmail.com>  Fri, 17 Mar 2017 16:07:53 +0300
+
 ndhcpd (0.2.1-xenial1) xenial; urgency=medium
 
   * Add some logging
