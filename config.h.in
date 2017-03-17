@@ -5,4 +5,4 @@
 #define ndhcpd_VERSION_STRING "@ndhcpd_VERSION_STRING@"
 
 // Directories
-#define SYSCONFDIR "@CMAKE_INSTALL_FULL_SYSCONFDIR@"
+#define SYSCONFDIR "@CMAKE_INSTALL_FULL_SYSCONFDIR@/ndhcpd"
